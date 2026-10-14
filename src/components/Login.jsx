@@ -1,21 +1,26 @@
 import { InputGroup, Label, TextField, Button} from '@heroui/react'
 import React, { useState } from 'react'
+import { login } from '../api'
+
 
 export const Login = ({setIsLoggedin}) => {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+    const [username, setUsername] = useState('heg')
+    const [password, setPassword] = useState('1234')
     const [msg, setMsg] = useState('')
 
-const myUsername = 'Heg'
-const myPassword = 1234
 
-    const handleLogin = () =>{
-        console.log(username, password)
-        if(username==myUsername && myPassword == password) {
-            setIsLoggedin(true)
-            setMsg('')
+
+    const handleLogin = async() =>{
+      try {
+        const data = await login(username, password)
+        setMsg(data.msg)
+        if(data.success){
+          setIsLoggedin(data.success)
         }
-        else setMsg('Hibás a megadott bejelentkezési adat!')
+      } catch (error) {
+        console.log(error)
+        setMsg(error.response?.data?.msg || 'Nem sikerült kapcsolódni a szerverhez!')
+      }
         
     }
     
@@ -40,4 +45,3 @@ const myPassword = 1234
     
 )
 }
-
